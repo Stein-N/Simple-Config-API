@@ -5,7 +5,7 @@ plugins {
     id 'java-library'
 }
 base {
-    archivesName = "${mod_name}-neoforge-${minecraft_base_version}"
+    archivesName = "${mod_id}-neoforge"
 }
 
 // Automatically enable neoforge AccessTransformers if the file exists
@@ -64,7 +64,7 @@ tasks.withType(ProcessResources).matching(notNeoTask).configureEach {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId base.archivesName.get()
+            artifactId "simpleconfigapi-neoforge"
             from components.java
         }
     }

@@ -31,7 +31,7 @@ public class TomlSerializer {
 
     private static void writeElement(BufferedWriter writer, int indentation, String key, TomlElement element) throws IOException {
         // Write comments
-        if (element.comment != null) comment(writer, indentation, element.comment.replace("\n", "\n#"));
+        if (element.comment != null) comment(writer, indentation, element.comment.replace("\n", "\n    # "));
         if (element.rangedComment != null) comment(writer, indentation, element.rangedComment);
 
         // Write per element type
@@ -78,7 +78,7 @@ public class TomlSerializer {
     }
 
     private static void indentation(BufferedWriter writer, int indentation) throws IOException{
-        writer.write("  ".repeat(indentation));
+        writer.write("    ".repeat(indentation));
     }
 
     private static void comment(BufferedWriter writer, int indentation, String comment) throws IOException{
