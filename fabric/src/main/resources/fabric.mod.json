@@ -29,6 +29,11 @@
     },
     "suggests": {
         "another-mod": "*"
+    },
+    "custom": {
+        "modmenu": {
+            "badges": ["library"]
+        }
     }
 }
   

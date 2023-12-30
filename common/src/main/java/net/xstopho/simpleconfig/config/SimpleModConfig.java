@@ -13,6 +13,7 @@ import net.xstopho.simpleconfig.values.ConfigValue;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class SimpleModConfig {
 
     private final String modID;
     private final File file;
-    private List<ConfigEntry<?>> entries;
+    private List<ConfigEntry<?>> entries = new ArrayList<>();
     private CommentedConfig config = CommentedConfig.inMemory();
     private final ISimpleConfigBuilder builder;
 
