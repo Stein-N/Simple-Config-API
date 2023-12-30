@@ -1,6 +1,6 @@
 package net.xstopho.simpleconfig.config;
 
-import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.*;
 import com.electronwill.nightconfig.core.io.ParsingException;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import com.electronwill.nightconfig.toml.TomlParser;
@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,12 +37,11 @@ public class SimpleModConfig {
         // Adds all keys and there Values from the .toml File to the empty CommentedConfig
         this.readValuesFromTomlFile();
 
-
         this.entries.forEach(this::readConfigValue);
 
         /* By clearing the CommentedConfig all Values/Keys that are not declared
             via the Config Builder gets deleted or corrected. */
-        this.config = CommentedConfig.inMemory();
+        this.config = CommentedConfig.of(LinkedHashMap::new, InMemoryCommentedFormat.withUniversalSupport());
 
         // Write Values/Comments/Category Comments to the empty CommentedConfig
         this.entries.forEach(this::writeToConfig);
