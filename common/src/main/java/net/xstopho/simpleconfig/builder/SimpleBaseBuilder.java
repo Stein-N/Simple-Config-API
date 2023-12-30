@@ -13,6 +13,12 @@ public abstract class SimpleBaseBuilder implements ISimpleConfigBuilder {
     public final Map<String, ConfigEntry<?>> entries = new LinkedHashMap<>();
     public final Map<String, String> categoryComments = new LinkedHashMap<>();
 
+    /**
+     * @param category Define a Category for all following Values that are defined by any define method.
+     * @return returns the ConfigBuilder itself, to add more actions afterward.<br>
+     *         You can also use the {@link #comment(String)} method before {@link #push(String)} to add a comment
+     *         for the Category in the Config file.
+     */
     @Override
     public ISimpleConfigBuilder push(String category) {
         if (this.category == null) {
@@ -23,6 +29,10 @@ public abstract class SimpleBaseBuilder implements ISimpleConfigBuilder {
         return this;
     }
 
+    /**
+     * @return returns the ConfigBuilder itself, to add more actions afterward.<br>
+     *         Basically deletes the current set Category.
+     */
     @Override
     public ISimpleConfigBuilder pop() {
         if (this.category != null) this.category = null;
@@ -30,12 +40,27 @@ public abstract class SimpleBaseBuilder implements ISimpleConfigBuilder {
         return this;
     }
 
+    /**
+     * @param comment can be as long as you want
+     * @return returns the ConfigBuilder itself, to add more actions afterward.<br>
+     *         Use this Method before declaring a Category with {@link #push(String)}
+     *         or defining a Value with f.e. {@link #define(String, int)}.<br>
+     *         When a Ranged Value is defined by f.e. {@link #defineInRange(String, int, int, int)} the
+     *         comment gets ignored, because it gets automatically a ranged comment!
+     */
     @Override
     public ISimpleConfigBuilder comment(String comment) {
         this.comment = " " + comment;
         return this;
     }
 
+    /**
+     * @param path Path where the Value gets saved in the .toml file
+     * @param configValue contains the defaultValue and comment defined by the {@link ISimpleConfigBuilder}<br>
+     *                    via the {@link #comment(String)} and f.e. {@link #define(String, int)} Methods
+     * @return returns a Supplier that returns the value from the config file, when it is initialised.
+     * @param <T> gets defined by the {@link #define(String, int)} methods.
+     */
     public <T> Supplier<T> addEntry(String path, ConfigValue<T> configValue) {
         if (this.entries.containsKey(path)) throw new IllegalStateException("Key '" + path + "' is already defined!");
 
@@ -45,6 +70,10 @@ public abstract class SimpleBaseBuilder implements ISimpleConfigBuilder {
         return entry::getValue;
     }
 
+    /**
+     * @param key defined key where the Value gets saved in the .toml file
+     * @return returns a key separated with a dot, when a Category is set, when not it returns the given key
+     */
     public String createKey(String key) {
         if (category != null) return category + "." + key;
         return key;
