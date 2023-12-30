@@ -1,37 +1,37 @@
 package net.xstopho.simpleconfig.values;
 
-import net.xstopho.simpleconfig.toml.TomlElement;
-import net.xstopho.simpleconfig.toml.TomlPrimitive;
+import java.util.function.Predicate;
 
-public class IntegerConfigValue extends BaseConfigValue<Integer, TomlElement>{
+public class IntegerConfigValue extends ConfigValue<Integer> {
 
-    private final int minimum, maximum;
+    private final int min, max;
 
-    public IntegerConfigValue(Integer defaultValue, int minimum, int maximum, String comment){
+    public IntegerConfigValue(int defaultValue, int min, int max, String comment) {
         super(defaultValue, comment);
-        this.minimum = minimum;
-        this.maximum = maximum;
+        this.min = min;
+        this.max = max;
+    }
+
+    public IntegerConfigValue(int defaultValue, String comment) {
+        this(defaultValue, 0, 0, comment);
     }
 
     @Override
-    public String getRangedComment(){
-        if (minimum == 0 && maximum == 0) return null;
-        return "Range: " + this.minimum + " ~ " + this.maximum + " - Default: " + this.defaultValue;
+    public String getRangedComment() {
+        if (isRanged()) return " Range: " + this.min + " ~ " + this.max + " - Default: " + this.defaultValue;
+        else return null;
     }
 
     @Override
-    public boolean validValue(Integer value){
-        if (minimum == 0 && maximum == 0) return true;
-        return value >= this.minimum && value <= this.maximum;
+    public boolean validate(Object value) {
+        Predicate<Object> isConvertible = (o) -> o instanceof Integer;
+
+        if (isRanged() && isConvertible.test(value)) return (int) value >= this.min && (int) value <= this.max;
+        else return !isRanged() && isConvertible.test(value);
     }
 
     @Override
-    public TomlElement serialize(Integer value){
-        return TomlPrimitive.of(value);
-    }
-
-    @Override
-    public Integer deserialize(TomlElement serialized){
-        return serialized.isInteger() ? serialized.getAsInteger() : null;
+    public boolean isRanged() {
+        return min != 0 && max != 0;
     }
 }

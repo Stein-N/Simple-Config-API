@@ -1,31 +1,25 @@
 package net.xstopho.simpleconfig.values;
 
-import net.xstopho.simpleconfig.toml.TomlElement;
-import net.xstopho.simpleconfig.toml.TomlPrimitive;
+import java.util.function.Predicate;
 
-public class BooleanConfigValue extends BaseConfigValue<Boolean, TomlElement> {
-
-    public BooleanConfigValue(Boolean defaultValue, String comment){
+public class BooleanConfigValue extends ConfigValue<Boolean> {
+    public BooleanConfigValue(Boolean defaultValue, String comment) {
         super(defaultValue, comment);
     }
 
     @Override
-    public String getRangedComment(){
-        return "Allowed values: true, false - Default: " + this.defaultValue;
+    public String getRangedComment() {
+        return " Allowed: true - false   Default: " + this.defaultValue;
     }
 
     @Override
-    public boolean validValue(Boolean value){
-        return true;
+    public boolean validate(Object value) {
+        Predicate<Object> isConvertible = (o) -> o instanceof Boolean;
+        return isConvertible.test(value);
     }
 
     @Override
-    public TomlElement serialize(Boolean value){
-        return TomlPrimitive.of(value);
-    }
-
-    @Override
-    public Boolean deserialize(TomlElement serialized){
-        return serialized.isBoolean() ? serialized.getAsBoolean() : null;
+    public boolean isRanged() {
+        return false;
     }
 }

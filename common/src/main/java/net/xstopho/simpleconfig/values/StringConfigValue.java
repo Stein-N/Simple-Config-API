@@ -1,37 +1,38 @@
 package net.xstopho.simpleconfig.values;
 
-import net.xstopho.simpleconfig.toml.TomlElement;
-import net.xstopho.simpleconfig.toml.TomlPrimitive;
+import java.util.function.Predicate;
 
-public class StringConfigValue extends BaseConfigValue<String, TomlElement> {
+public class StringConfigValue extends ConfigValue<String> {
 
-    private final int minLength, maxLength;
+    private final int min, max;
 
-    public StringConfigValue(String defaultValue, int minLength, int maxLength, String comment) {
+    public StringConfigValue(String defaultValue, int min, int max, String comment) {
         super(defaultValue, comment);
-        this.minLength = minLength;
-        this.maxLength = maxLength;
+        this.min = min;
+        this.max = max;
+    }
+
+    public StringConfigValue(String defaultValue, String comment) {
+        this(defaultValue, 0, 0, comment);
     }
 
     @Override
     public String getRangedComment() {
-        if (minLength == 0 && maxLength == 0) return null;
-        return "Allowed length: " + minLength + " ~ " + maxLength + " - Default length: " + defaultValue;
+        if (isRanged()) return " Allowed Length: " + this.min + " ~ " + this.max + " chars.";
+        else return null;
     }
 
     @Override
-    public boolean validValue(String value) {
-        if (minLength == 0 && maxLength == 0) return true;
-        return value.length() >= minLength && value.length() <= maxLength;
+    public boolean validate(Object value) {
+        Predicate<Object> isConvertible = (o) -> o instanceof String;
+
+        if (isRanged() && isConvertible.test(value))
+            return value.toString().length() >= this.min && value.toString().length() <= this.max;
+        else return !isRanged() && isConvertible.test(value);
     }
 
     @Override
-    public TomlElement serialize(String value) {
-        return TomlPrimitive.of(value);
-    }
-
-    @Override
-    public String deserialize(TomlElement serialized) {
-        return serialized.isString() ? serialized.getAsString() : null;
+    public boolean isRanged() {
+        return min != 0 && max != 0;
     }
 }

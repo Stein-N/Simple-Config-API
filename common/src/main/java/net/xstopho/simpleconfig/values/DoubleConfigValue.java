@@ -1,38 +1,37 @@
 package net.xstopho.simpleconfig.values;
 
-import net.xstopho.simpleconfig.toml.TomlElement;
-import net.xstopho.simpleconfig.toml.TomlPrimitive;
+import java.util.function.Predicate;
 
-public class DoubleConfigValue extends BaseConfigValue<Double, TomlElement> {
+public class DoubleConfigValue extends ConfigValue<Double> {
 
-    private final double minimum, maximum;
+    private final double min, max;
 
-    public DoubleConfigValue(Double defaultValue, double minimum, double maximum, String comment){
+    public DoubleConfigValue(double defaultValue, double min, double max, String comment) {
         super(defaultValue, comment);
-        this.minimum = minimum;
-        this.maximum = maximum;
+        this.min = min;
+        this.max = max;
+    }
+
+    public DoubleConfigValue(Double defaultValue, String comment) {
+        this(defaultValue, 0.0, 0.0, comment);
     }
 
     @Override
-    public String getRangedComment(){
-        if (minimum == 0 && maximum == 0) return null;
-        return "Range: " + this.minimum + " ~ " + this.maximum + " - Default: " + this.defaultValue;
+    public String getRangedComment() {
+        if (isRanged()) return " Range: " + this.min + " ~ " + this.max + " - Default: " + this.defaultValue;
+        else return null;
     }
 
     @Override
-    public boolean validValue(Double value){
-        if (minimum == 0 && maximum == 0) return true;
-        return value >= this.minimum && value <= this.maximum;
+    public boolean validate(Object value) {
+        Predicate<Object> isConvertible = (o) -> o instanceof Integer || o instanceof Double;
+
+        if (isRanged() && isConvertible.test(value)) return (double) value >= min && (double) value <= max;
+        else return !isRanged() && isConvertible.test(value);
     }
 
     @Override
-    public TomlElement serialize(Double value){
-        return TomlPrimitive.of(value);
-    }
-
-    @Override
-    public Double deserialize(TomlElement serialized){
-        return serialized.isInteger() ? Double.valueOf(serialized.getAsInteger())
-                : serialized.isDouble() ? serialized.getAsDouble() : null;
+    public boolean isRanged() {
+        return min != 0.0 && max != 0.0;
     }
 }
