@@ -13,17 +13,16 @@ It is downloadable on [Curseforge](https://www.curseforge.com/minecraft/mc-mods/
 - Auto Correction of invalid or corrupt Config Entries
 
 ### Planned Features
-- FileWatcher to dynamically load changed Values 
+- FileWatcher to dynamically load changed Values
 - Config Sync with Server
 
 ## For Developers
 
 #### Latest Version: 0.2.4
 
-### Adding Simple Config API to your project
 <details>
+<summary>Adding Simple Config API to your project</summary>
 
-##### Main Repository
 ````groovy
     repositories {
         maven {
@@ -74,8 +73,8 @@ It is downloadable on [Curseforge](https://www.curseforge.com/minecraft/mc-mods/
 </details>
 </details>
 
-### Create a Config
 <details>
+<summary>Create a Config</summary>
 
 Before defining Config Values you have to create a SimpleConfigBuilder.
 ````java
@@ -84,9 +83,9 @@ Before defining Config Values you have to create a SimpleConfigBuilder.
 All Config Values are saved as a Supplier.
 ````java
     Supplier<Integer> value_0 = builder.define(<key>, <IntegerValue>);
-    Supplier<Double> value_1 = builder.define(<key>, <DoubleValue>);
-    Supplier<String> value_2 = builder.define(<key>, <StringValue>);
-    Supplier<Boolean> value_3 = builder.define(<key>, <BooleanValue>);
+Supplier<Double> value_1 = builder.define(<key>, <DoubleValue>);
+Supplier<String> value_2 = builder.define(<key>, <StringValue>);
+Supplier<Boolean> value_3 = builder.define(<key>, <BooleanValue>);
 ````
 Registering / Creating the Config file
 ````java
