@@ -83,9 +83,9 @@ Before defining Config Values you have to create a SimpleConfigBuilder.
 All Config Values are saved as a Supplier.
 ````java
     Supplier<Integer> value_0 = builder.define(<key>, <IntegerValue>);
-Supplier<Double> value_1 = builder.define(<key>, <DoubleValue>);
-Supplier<String> value_2 = builder.define(<key>, <StringValue>);
-Supplier<Boolean> value_3 = builder.define(<key>, <BooleanValue>);
+    Supplier<Double> value_1 = builder.define(<key>, <DoubleValue>);
+    Supplier<String> value_2 = builder.define(<key>, <StringValue>);
+    Supplier<Boolean> value_3 = builder.define(<key>, <BooleanValue>);
 ````
 Registering / Creating the Config file
 ````java
