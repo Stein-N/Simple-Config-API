@@ -3,6 +3,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
 }
 base {
     archivesName = "${mod_id}-fabric"
@@ -69,4 +70,12 @@ publishing {
             url "file://" + System.getenv("local_maven")
         }
     }
+}
+
+shadowJar {
+    dependencies {
+        include(dependency('com.electronwill.night-config:toml:3.6.7'))
+        include(dependency('com.electronwill.night-config:core:3.6.7'))
+    }
+    relocate('com.electronwill.night-config', 'shaded.com.electronwill.night-config')
 }
