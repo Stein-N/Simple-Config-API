@@ -32,6 +32,6 @@ public class DoubleConfigValue extends ConfigValue<Double> {
 
     @Override
     public boolean isRanged() {
-        return min != 0.0 && max != 0.0;
+        return !(min == 0.0 && max == 0.0);
     }
 }

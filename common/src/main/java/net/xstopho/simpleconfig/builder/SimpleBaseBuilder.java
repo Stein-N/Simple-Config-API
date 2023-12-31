@@ -9,7 +9,8 @@ import java.util.function.Supplier;
 
 public abstract class SimpleBaseBuilder implements ISimpleConfigBuilder {
 
-    public String category = null, comment;
+    private String category = null;
+    public String comment;
     public final Map<String, ConfigEntry<?>> entries = new LinkedHashMap<>();
     public final Map<String, String> categoryComments = new LinkedHashMap<>();
 

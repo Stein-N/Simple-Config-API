@@ -93,5 +93,5 @@ Registering / Creating the Config file
     SimpleConfigRegitry.INSTANCE.register(<mod_id>, <SimpleConfigBuilder>);
     SimpleConfigRegitry.INSTANCE.register(<mod_id>, <fileName>, <SimpleConfigBuilder>);
 ````
-For more information about defining Config Values or working with the Config in general watch the Wiki.
+For more information about defining Config Values or working with the Config in general watch the [Wiki](https://github.com/Stein-N/Simple-Config-API/wiki/How-to-use-the-API)
 </details>

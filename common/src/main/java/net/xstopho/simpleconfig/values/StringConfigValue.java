@@ -33,6 +33,6 @@ public class StringConfigValue extends ConfigValue<String> {
 
     @Override
     public boolean isRanged() {
-        return min != 0 && max != 0;
+        return !(min == 0 && max == 0);
     }
 }

@@ -32,6 +32,6 @@ public class IntegerConfigValue extends ConfigValue<Integer> {
 
     @Override
     public boolean isRanged() {
-        return min != 0 && max != 0;
+        return !(min == 0 && max == 0);
     }
 }
