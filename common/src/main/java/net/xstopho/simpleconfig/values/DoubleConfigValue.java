@@ -24,7 +24,7 @@ public class DoubleConfigValue extends ConfigValue<Double> {
 
     @Override
     public boolean validate(Object value) {
-        Predicate<Object> isConvertible = (o) -> o instanceof Integer || o instanceof Double;
+        Predicate<Object> isConvertible = (o) -> o instanceof Double;
 
         if (isRanged() && isConvertible.test(value)) return (double) value >= min && (double) value <= max;
         else return !isRanged() && isConvertible.test(value);
