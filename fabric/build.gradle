@@ -3,11 +3,16 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'fabric-loom' version '1.2-SNAPSHOT'
-    id 'com.github.johnrengelman.shadow' version '7.1.0'
 }
+
 base {
     archivesName = "${mod_id}-fabric"
 }
+
+configurations {
+    extraLibs
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings loom.officialMojangMappings()
@@ -17,6 +22,9 @@ dependencies {
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
 
     implementation group: 'com.electronwill.night-config', name: 'toml', version: '3.6.7'
+
+    // Includes the NightConfig Library into the jar file
+    extraLibs group: 'com.electronwill.night-config', name: 'toml', version: '3.6.7'
 
     implementation project(":common")
 }
@@ -72,10 +80,8 @@ publishing {
     }
 }
 
-shadowJar {
-    dependencies {
-        include(dependency('com.electronwill.night-config:toml:3.6.7'))
-        include(dependency('com.electronwill.night-config:core:3.6.7'))
+jar {
+    from {
+        configurations.extraLibs.collect() {it.isDirectory() ? it : zipTree(it)}
     }
-    relocate('com.electronwill.night-config', 'shaded.com.electronwill.night-config')
 }
