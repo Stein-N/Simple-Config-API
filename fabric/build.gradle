@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'idea'
     id 'maven-publish'
-    id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'fabric-loom' version '1.4-SNAPSHOT'
 }
 
 base {
@@ -10,7 +10,7 @@ base {
 }
 
 configurations {
-    extraLibs
+    includedLibs
 }
 
 dependencies {
@@ -22,9 +22,7 @@ dependencies {
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
 
     implementation group: 'com.electronwill.night-config', name: 'toml', version: '3.6.7'
-
-    // Includes the NightConfig Library into the jar file
-    extraLibs group: 'com.electronwill.night-config', name: 'toml', version: '3.6.7'
+    includedLibs group: 'com.electronwill.night-config', name: 'toml', version: '3.6.7'
 
     implementation project(":common")
 }
@@ -77,11 +75,5 @@ publishing {
         maven {
             url "file://" + System.getenv("local_maven")
         }
-    }
-}
-
-jar {
-    from {
-        configurations.extraLibs.collect() {it.isDirectory() ? it : zipTree(it)}
     }
 }
