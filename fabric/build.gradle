@@ -1,12 +1,30 @@
-plugins {
-    id 'java'
-    id 'idea'
-    id 'maven-publish'
-    id 'fabric-loom' version '1.4-SNAPSHOT'
-}
-
 base {
     archivesName = "${mod_id}-fabric"
+}
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+loom {
+    if(project(":common").file("src/main/resources/${mod_id}.accesswidener").exists()){
+        accessWidenerPath.set(project(":common").file("src/main/resources/${mod_id}.accesswidener"))
+    }
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
+
+    runs {
+        client {
+            client()
+            setConfigName("Fabric Client")
+        }
+        server {
+            server()
+            setConfigName("Fabric Server")
+        }
+    }
 }
 
 configurations {
@@ -14,46 +32,21 @@ configurations {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
-
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+    modApi "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 
     implementation group: 'com.electronwill.night-config', name: 'toml', version: '3.6.7'
     includedLibs group: 'com.electronwill.night-config', name: 'toml', version: '3.6.7'
 
-    implementation project(":common")
-}
 
-loom {
-    if (project(":common").file("src/main/resources/${mod_id}.accesswidener").exists()) {
-        accessWidenerPath.set(project(":common").file("src/main/resources/${mod_id}.accesswidener"))
-    }
-    mixin {
-        defaultRefmapName.set("${mod_id}.refmap.json")
-    }
-    runs {
-        client {
-            client()
-            setConfigName("Fabric Client")
-            ideConfigGenerated(true)
-            runDir("run")
-        }
-        server {
-            server()
-            setConfigName("Fabric Server")
-            ideConfigGenerated(true)
-            runDir("run")
-        }
-    }
+    compileOnly project(":common")
 }
 
 tasks.withType(JavaCompile).configureEach {
     source(project(":common").sourceSets.main.allSource)
 }
 tasks.withType(Javadoc).configureEach {
+    options.addStringOption('Xdoclint:none', '-quiet')
     source(project(":common").sourceSets.main.allJava)
 }
 tasks.named("sourcesJar", Jar) {
@@ -64,16 +57,8 @@ processResources {
     from project(":common").sourceSets.main.resources
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId base.archivesName.get()
-            from components.java
-        }
-    }
-    repositories {
-        maven {
-            url "file://" + System.getenv("local_maven")
-        }
+jar {
+    from {
+        configurations.includedLibs.collect {it.isDirectory() ? it : zipTree(it)}
     }
 }

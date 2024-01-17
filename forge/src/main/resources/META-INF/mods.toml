@@ -1,15 +1,15 @@
 modLoader = "javafml"
 loaderVersion = "${forge_loader_version_range}"
-license = "${license}"
+license = "${mod_license}"
 
 [[mods]]
     modId = "${mod_id}"
-    version = "${version}"
+    version = "${mod_version}"
     displayName = "${mod_name}"
     logoFile = "icon.png"
-    credits = "${credits}"
+    credits = "${mod_credits}"
     authors = "${mod_author}"
-    description = '''${description}'''
+    description = '''${mod_description}'''
 
 [[dependencies.${mod_id}]]
     modId = "forge"
