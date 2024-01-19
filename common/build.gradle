@@ -1,5 +1,5 @@
 base {
-    archivesName = "${mod_id}-common"
+    archivesName = "${mod_id}-common-${minecraft_version}"
 }
 
 loom {
@@ -12,6 +12,5 @@ dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-
     implementation group: 'com.electronwill.night-config', name: 'toml', version: '3.6.7'
 }

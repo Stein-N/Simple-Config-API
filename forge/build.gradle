@@ -1,10 +1,17 @@
 base {
-    archivesName = "${mod_id}-forge"
+    archivesName = "${mod_id}-forge-${minecraft_version}"
 }
 
 architectury {
     platformSetupLoomIde()
     forge()
+}
+
+dependencies {
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    compileOnly project(":common")
 }
 
 loom {
@@ -18,29 +25,21 @@ loom {
     }
 
     runs {
-        client {
-            client()
-            setConfigName("Forge Client")
-        }
-        server {
-            server()
-            setConfigName("Forge Server")
+        client { client(); setConfigName("Forge Client") }
+        server { server(); setConfigName("Forge Server") }
+        datagen {
+            data()
+            setConfigName("Forge Datagen")
+            programArgs "--all", "--mod", "${mod_id}"
+            programArgs "--output", file("src/main/generated").getAbsolutePath()
         }
     }
-}
-
-
-dependencies {
-    forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
-    compileOnly project(":common")
 }
 
 tasks.withType(JavaCompile).configureEach {
     source(project(":common").sourceSets.main.allSource)
 }
 tasks.withType(Javadoc).configureEach {
-    options.addStringOption('Xdoclint:none', '-quiet')
     source(project(":common").sourceSets.main.allJava)
 }
 tasks.named("sourcesJar", Jar) {
@@ -48,4 +47,5 @@ tasks.named("sourcesJar", Jar) {
 }
 processResources {
     from project(":common").sourceSets.main.resources
+    from project(":forge").file("src/main/generated")
 }

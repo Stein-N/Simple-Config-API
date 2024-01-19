@@ -1,10 +1,21 @@
 base {
-    archivesName = "${mod_id}-neoforge"
+    archivesName = "${mod_id}-neoforge-${minecraft_version}"
 }
 
 architectury {
     platformSetupLoomIde()
     neoForge()
+}
+
+repositories {
+    maven { url "https://maven.neoforged.net/releases/" }
+}
+
+dependencies {
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    neoForge "net.neoforged:neoforge:${neoforge_version}"
+
+    compileOnly project(":common")
 }
 
 loom {
@@ -14,28 +25,21 @@ loom {
     neoForge {}
 
     runs {
-        client {
-            client()
-            setConfigName("NeoForge Client")
-        }
-        server {
-            server()
-            setConfigName("NeoForge Server")
+        client { client(); setConfigName("NeoForge Client") }
+        server { server(); setConfigName("NeoForge Server") }
+        datagen {
+            data()
+            setConfigName("NeoForge Datagen")
+            programArgs "--all", "--mod", "${mod_id}"
+            programArgs "--output", file("src/main/generated").getAbsolutePath()
         }
     }
-}
-
-dependencies {
-    neoForge "net.neoforged:neoforge:${neoforge_version}"
-
-    compileOnly project(":common")
 }
 
 tasks.withType(JavaCompile).configureEach {
     source(project(":common").sourceSets.main.allSource)
 }
 tasks.withType(Javadoc).configureEach {
-    options.addStringOption('Xdoclint:none', '-quiet')
     source(project(":common").sourceSets.main.allJava)
 }
 tasks.named("sourcesJar", Jar) {
@@ -43,4 +47,5 @@ tasks.named("sourcesJar", Jar) {
 }
 processResources {
     from project(":common").sourceSets.main.resources
+    from project(":neoforge").file("src/main/generated")
 }
