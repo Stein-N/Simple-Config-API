@@ -1,16 +1,18 @@
-base {
-    archivesName = "${mod_id}-common-${minecraft_version}"
+plugins {
+    id 'org.spongepowered.gradle.vanilla' version '0.2.1-SNAPSHOT'
 }
-
-loom {
-    if(project(":common").file("src/main/resources/${mod_id}.accesswidener").exists()){
-        accessWidenerPath.set(project(":common").file("src/main/resources/${mod_id}.accesswidener"))
+base {
+    archivesName = "${mod_id}-common"
+}
+minecraft {
+    version(minecraft_version)
+    if(file("src/main/resources/${mod_id}.accesswidener").exists()){
+        accessWideners(file("src/main/resources/${mod_id}.accesswidener"))
     }
 }
 
 dependencies {
-    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
-    // Do NOT use other classes from fabric loader
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    compileOnly group:'org.spongepowered', name:'mixin', version:'0.8.5'
+
     implementation group: 'com.electronwill.night-config', name: 'toml', version: '3.6.7'
 }

@@ -1,37 +1,63 @@
 plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.4-SNAPSHOT" apply false
-}
-
-architectury {
-    minecraft = minecraft_version
+    // Required for NeoGradle
+    id "org.jetbrains.gradle.plugin.idea-ext" version "1.1.7"
 }
 
 subprojects {
-    apply plugin: "dev.architectury.loom"
+    apply plugin: 'java'
+    apply plugin: 'idea'
 
-    loom {
-        silentMojangMappingsLicense()
+    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+    java.withSourcesJar()
+    java.withJavadocJar()
+
+    jar {
+        from(rootProject.file("LICENSE")) {
+            rename { "${it}_${mod_name}" }
+        }
+        manifest {
+            attributes([
+                    'Specification-Title'     : mod_name,
+                    'Specification-Vendor'    : mod_author,
+                    'Specification-Version'   : project.jar.archiveVersion,
+                    'Implementation-Title'    : project.name,
+                    'Implementation-Version'  : project.jar.archiveVersion,
+                    'Implementation-Vendor'   : mod_author,
+                    'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                    'Timestamp'               : System.currentTimeMillis(),
+                    'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+                    'Built-On-Minecraft'      : minecraft_version
+            ])
+        }
     }
 
-    configurations {
-        common
-        compileClasspath.extendsFrom common
-        runtimeClasspath.extendsFrom common
-        developmentFabric.extendsFrom common
-        // don't know why, but using developmentForge results in an Exception but using developmentFabric works fine everytime.
+    sourcesJar {
+        from(rootProject.file("LICENSE")) {
+            rename { "${it}_${mod_name}" }
+        }
     }
 
-    dependencies {
-        minecraft "com.mojang:minecraft:${minecraft_version}"
-        mappings loom.officialMojangMappings()
+    repositories {
+        mavenCentral()
+        maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        it.options.encoding = 'UTF-8'
+        it.options.getRelease().set(17)
+    }
+    tasks.withType(Javadoc).configureEach {
+        options.addStringOption('Xdoclint:none', '-quiet')
     }
 
     processResources {
-        def expandProps =[
+        def expandProps = [
+                // Project related Keys
+                "version": version,
+                "group": project.group,
+
                 // Mod related Keys
-                "mod_version": mod_version,
-                "maven_group": maven_group,
+                "mod_version": version,
                 "minecraft_version": minecraft_version,
                 "mod_name": mod_name,
                 "mod_author": mod_author,
@@ -56,31 +82,17 @@ subprojects {
                 "neoforge_version": neoforge_version,
                 "neoforge_loader_version_range": neoforge_loader_version_range
         ]
+
         filesMatching(['pack.mcmeta', 'fabric.mod.json', 'META-INF/mods.toml', '*.mixins.json']) {
             expand expandProps
         }
         inputs.properties(expandProps)
     }
-}
 
-allprojects {
-    apply plugin: "java"
-    apply plugin: "architectury-plugin"
-
-    version = mod_version
-    group = maven_group
-
-    tasks.withType(JavaCompile).configureEach {
-        options.encoding = "UTF-8"
-        options.release = 17
-    }
-
-    tasks.withType(Javadoc).configureEach {
-        options.addStringOption('Xdoclint:none', '-quiet')
-    }
-
-    java {
-        withSourcesJar()
-        withJavadocJar()
+    // Disables Gradle's custom module metadata from being published to maven. The
+    // metadata includes mapped dependencies which are not reasonably consumable by
+    // other mod developers.
+    tasks.withType(GenerateModuleMetadata).configureEach {
+        enabled = false
     }
 }
