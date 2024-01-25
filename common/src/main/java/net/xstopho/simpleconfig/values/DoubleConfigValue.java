@@ -18,7 +18,7 @@ public class DoubleConfigValue extends ConfigValue<Double> {
 
     @Override
     public String getRangedComment() {
-        if (isRanged()) return " Range: " + this.min + " ~ " + this.max + " - Default: " + this.defaultValue;
+        if (isRanged()) return getComment() + "\n Range: " + this.min + " ~ " + this.max + " - Default: " + this.defaultValue;
         else return null;
     }
 

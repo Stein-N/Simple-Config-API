@@ -9,7 +9,7 @@ public class BooleanConfigValue extends ConfigValue<Boolean> {
 
     @Override
     public String getRangedComment() {
-        return " Allowed: true - false   Default: " + this.defaultValue;
+        return getComment() + "\n Allowed: true - false   Default: " + this.defaultValue;
     }
 
     @Override
