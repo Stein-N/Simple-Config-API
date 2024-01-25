@@ -18,7 +18,9 @@ public class StringConfigValue extends ConfigValue<String> {
 
     @Override
     public String getRangedComment() {
-        if (isRanged()) return getComment() + "\n Allowed Length: " + this.min + " ~ " + this.max + " chars.";
+        String rangedComment = "Allowed Length: " + this.min + " ~ " + this.max + " chars.";
+        if (isRanged() && hasComment()) return getComment() + "\n " + rangedComment;
+        if (isRanged()) return " " + rangedComment;
         else return null;
     }
 

@@ -18,4 +18,8 @@ public abstract class ConfigValue<T> implements IConfigValue<T> {
     public String getComment() {
         return comment;
     }
+
+    public boolean hasComment() {
+        return comment != null;
+    }
 }
