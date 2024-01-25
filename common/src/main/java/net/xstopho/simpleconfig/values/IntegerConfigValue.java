@@ -18,8 +18,9 @@ public class IntegerConfigValue extends ConfigValue<Integer> {
 
     @Override
     public String getRangedComment() {
-        if (isRanged()) return " Range: " + this.min + " ~ " + this.max + " - Default: " + this.defaultValue;
-        else return null;
+        if (isRanged()) {
+            return getComment() + "\n Range: " + this.min + " ~ " + this.max + " - Default: " + this.defaultValue;
+        } else return null;
     }
 
     @Override

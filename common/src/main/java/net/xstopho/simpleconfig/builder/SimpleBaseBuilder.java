@@ -9,10 +9,9 @@ import java.util.function.Supplier;
 
 public abstract class SimpleBaseBuilder implements ISimpleConfigBuilder {
 
-    private String category = null;
-    public String comment;
-    public final Map<String, ConfigEntry<?>> entries = new LinkedHashMap<>();
-    public final Map<String, String> categoryComments = new LinkedHashMap<>();
+    String category = null, comment;
+    Map<String, ConfigEntry<?>> entries = new LinkedHashMap<>();
+    Map<String, String> categoryComments = new LinkedHashMap<>();
 
     /**
      * @param category Define a Category for all following Values that are defined by any define method.
@@ -42,7 +41,7 @@ public abstract class SimpleBaseBuilder implements ISimpleConfigBuilder {
     }
 
     /**
-     * @param comment can be as long as you want
+     * @param msg can be as long as you want
      * @return returns the ConfigBuilder itself, to add more actions afterward.<br>
      *         Use this Method before declaring a Category with {@link #push(String)}
      *         or defining a Value with f.e. {@link #define(String, int)}.<br>
@@ -50,8 +49,9 @@ public abstract class SimpleBaseBuilder implements ISimpleConfigBuilder {
      *         comment gets ignored, because it gets automatically a ranged comment!
      */
     @Override
-    public ISimpleConfigBuilder comment(String comment) {
-        this.comment = " " + comment;
+    public ISimpleConfigBuilder comment(String msg) {
+        if (comment == null) this.comment = " " + msg;
+        else this.comment = this.comment + "\n " + msg;
         return this;
     }
 
