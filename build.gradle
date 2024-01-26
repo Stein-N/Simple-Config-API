@@ -6,6 +6,7 @@ plugins {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
+    apply plugin: 'maven-publish'
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
     java.withSourcesJar()
@@ -94,5 +95,21 @@ subprojects {
     // other mod developers.
     tasks.withType(GenerateModuleMetadata).configureEach {
         enabled = false
+    }
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifactId = mod_id + "-" + base.archivesName.get()
+                groupId = "xstopho.simpleconfigapi"
+                from components.java
+            }
+        }
+
+        // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+        repositories {
+            maven {
+                url = "E:\\Mod Resources\\resources\\maven"
+            }
+        }
     }
 }
