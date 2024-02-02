@@ -17,7 +17,7 @@ It is downloadable on [Curseforge](https://www.curseforge.com/minecraft/mc-mods/
 
 ### For Developers
 
-#### Latest Version: 0.2.4
+#### Latest Version: 0.3.0
 #### Available for:
   - Fabric 1.20 -> latest
   - Forge 1.20 -> latest
