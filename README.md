@@ -17,11 +17,13 @@ It is downloadable on [Curseforge](https://www.curseforge.com/minecraft/mc-mods/
 
 ### For Developers
 
-#### Latest Version: 0.3.0
+#### Latest Version: 0.3.2
 #### Available for:
   - Fabric 1.20 -> latest
   - Forge 1.20 -> latest
   - NeoForge 1.20.1 -> latest
+
+### Note: NeoForge will have full support after 1.21 release, because of the changes of some implementation or tags in the mods.toml File.
 
 <details>
 <summary>Adding Simple Config API to your project</summary>
