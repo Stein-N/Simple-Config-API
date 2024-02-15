@@ -102,6 +102,12 @@ subprojects {
                 artifactId = mod_id + "-" + base.archivesName.get()
                 groupId = "xstopho.simpleconfigapi"
                 from components.java
+
+                pom.withXml {
+                    asNode().dependencies.each { dependencyNode ->
+                        dependencyNode.replaceNode {}
+                    }
+                }
             }
         }
 
